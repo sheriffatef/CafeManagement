@@ -30,7 +30,22 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 
 # Set environment variables for Railway
-ENV ASPNETCORE_URLS=http://+:$PORT
-ENV ASPNETCORE_ENVIRONMENT=Production
+# Railway will set $PORT automatically, default to 80 for local development
+ENV PORT=80
+ENV ASPNETCORE_URLS=http://+:${PORT}
+
+# Enable debug mode
+ENV ASPNETCORE_ENVIRONMENT=Development
+ENV DOTNET_ENVIRONMENT=Development
+
+# Enable detailed error messages
+ENV ASPNETCORE_DETAILEDERRORS=true
+
+# Enable developer exception page
+ENV ASPNETCORE_SHOWEXCEPTIONDETAILS=true
+
+# Enable console logging
+ENV Logging__Console__LogLevel__Default=Debug
+ENV Logging__Console__LogLevel__Microsoft=Debug
 
 ENTRYPOINT ["dotnet", "CafeManagement.dll"]
