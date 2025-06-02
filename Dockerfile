@@ -1,10 +1,14 @@
-FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
 # Install MySQL client and other tools needed for migrations
 RUN apt-get update && apt-get install -y default-mysql-client bash && rm -rf /var/lib/apt/lists/*
+
+# Install EF Core tools globally
+RUN dotnet tool install --global dotnet-ef
+ENV PATH="$PATH:/root/.dotnet/tools"
 
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src

@@ -3,7 +3,8 @@ set -e
 
 # Run migrations
 echo "Running database migrations..."
-dotnet ef database update --project /app/Persistence.dll --startup-project /app/CafeManagement.dll
+# Use the EF migrations bundle that was created during build
+./efbundle --connection "${ConnectionStrings__DefaultConnection}"
 echo "Migrations completed successfully!"
 
 # Start the application
