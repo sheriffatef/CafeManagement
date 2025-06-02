@@ -3,6 +3,9 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
+# Install MySQL client for potential debugging
+RUN apt-get update && apt-get install -y default-mysql-client && rm -rf /var/lib/apt/lists/*
+
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
@@ -47,5 +50,8 @@ ENV ASPNETCORE_SHOWEXCEPTIONDETAILS=true
 # Enable console logging
 ENV Logging__Console__LogLevel__Default=Debug
 ENV Logging__Console__LogLevel__Microsoft=Debug
+
+# MySQL Connection String (placeholder - override this with actual values in deployment)
+ENV ConnectionStrings__DefaultConnection="Server=mysql_host;Database=CafeManagement;User=admin;Password=admin;Port=3306;"
 
 ENTRYPOINT ["dotnet", "CafeManagement.dll"]

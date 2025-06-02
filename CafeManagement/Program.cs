@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
-using Microsoft.Data.SqlClient;
+using MySqlConnector;
 
 namespace CafeManagement
 {
@@ -33,8 +33,9 @@ namespace CafeManagement
             });
 
             // DbContext
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services.AddDbContext<CaffeDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+                options.UseMySql(connectionString, MySqlServerVersion.LatestSupportedServerVersion));
 
             // Identity
             builder.Services.AddIdentity<User, IdentityRole>()
@@ -127,7 +128,7 @@ namespace CafeManagement
             builder.Services.AddEndpointsApiExplorer();
 
             var app = builder.Build();
-            SqlConnection.ClearAllPools();
+            // No need to clear connection pools for MySQL
 
             // 🌱 Seed roles and default admin
             using (var scope = app.Services.CreateScope())
